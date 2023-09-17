@@ -1,10 +1,11 @@
 package com.example.patientregistrationsystemapi.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import jakarta.persistence.Entity;
 import jakarta.persistence.*;
-import jakarta.validation.constraints.NotBlank;
 import lombok.*;
 
+import javax.validation.constraints.NotBlank;
 import java.util.List;
 import java.util.UUID;
 
