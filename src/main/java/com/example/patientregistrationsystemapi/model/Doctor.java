@@ -1,10 +1,9 @@
 package com.example.patientregistrationsystemapi.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import jakarta.persistence.Entity;
-import jakarta.persistence.*;
 import lombok.*;
 
+import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import java.util.List;
 import java.util.UUID;
@@ -15,7 +14,7 @@ import java.util.UUID;
 @Entity
 public class Doctor {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     @Column(unique = true)
     private UUID uuid;

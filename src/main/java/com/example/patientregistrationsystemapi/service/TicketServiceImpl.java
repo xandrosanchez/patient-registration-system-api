@@ -2,13 +2,16 @@ package com.example.patientregistrationsystemapi.service;
 
 import com.example.patientregistrationsystemapi.dto.ScheduleRequest;
 import com.example.patientregistrationsystemapi.dto.TicketRequest;
+import com.example.patientregistrationsystemapi.exception.DoctorNotFoundException;
 import com.example.patientregistrationsystemapi.exception.TicketNotFoundException;
 import com.example.patientregistrationsystemapi.model.Doctor;
+import com.example.patientregistrationsystemapi.model.Patient;
 import com.example.patientregistrationsystemapi.model.Ticket;
 import com.example.patientregistrationsystemapi.repository.TicketRepository;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -16,11 +19,13 @@ import java.util.List;
 public class TicketServiceImpl implements TicketService {
     private final TicketRepository ticketRepository;
     private final DoctorService doctorService;
+    private final PatientService patientService;
 
-    @Autowired
-    public TicketServiceImpl(TicketRepository ticketRepository, DoctorService doctorService) {
+    @Lazy
+    public TicketServiceImpl(TicketRepository ticketRepository, DoctorService doctorService, PatientService patientService) {
         this.ticketRepository = ticketRepository;
         this.doctorService = doctorService;
+        this.patientService = patientService;
     }
 
     /**
@@ -131,5 +136,21 @@ public class TicketServiceImpl implements TicketService {
         existingTicket.setEndTime(ticketRequest.getEndTime());
 
         return ticketRepository.save(existingTicket);
+    }
+
+    @Override
+    public List<Ticket> getTicketByDoctorAndDate(Long doctorId, LocalDate date) {
+        Doctor doctor = doctorService.getDoctorById(doctorId);
+        if (doctor == null) {
+            throw new DoctorNotFoundException("Doctor not found with ID " + doctorId);
+        }
+
+        return ticketRepository.findByDoctorAndStartTimeBetween(doctor, date.atStartOfDay(), date.plusDays(1).atStartOfDay());
+    }
+
+    @Override
+    public List<Ticket> getTicketsByPatientId(Long patientId) {
+        Patient patient = patientService.getPatientById(patientId);
+        return ticketRepository.findByPatient(patient);
     }
 }

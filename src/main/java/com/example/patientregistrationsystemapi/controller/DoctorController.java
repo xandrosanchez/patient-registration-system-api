@@ -5,6 +5,7 @@ import com.example.patientregistrationsystemapi.model.Doctor;
 import com.example.patientregistrationsystemapi.service.DoctorService;
 import io.swagger.annotations.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;

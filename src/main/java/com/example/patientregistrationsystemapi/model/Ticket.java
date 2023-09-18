@@ -2,7 +2,7 @@ package com.example.patientregistrationsystemapi.model;
 
 import javax.validation.constraints.NotNull;
 
-import jakarta.persistence.*;
+import javax.persistence.*;
 import lombok.*;
 
 import java.time.LocalDateTime;

@@ -9,12 +9,15 @@ import io.swagger.annotations.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @RestController
@@ -162,4 +165,46 @@ public class TicketController {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
+
+    @GetMapping("/doctor/{doctorId}/date/{date}")
+    @ApiOperation(value = "Получить билеты к указанному врачу на указанную дату")
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Успешно"),
+            @ApiResponse(code = 404, message = "Билеты не найдены")
+    })
+    public ResponseEntity<List<Ticket>> getTicketByDoctorAndDate(
+            @ApiParam(value = "Идентификатор врача", required = true) @PathVariable Long doctorId,
+            @ApiParam(value = "Дата и время", required = true) @PathVariable @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDate date) {
+        try {
+            List<Ticket> tickets = ticketService.getTicketByDoctorAndDate(doctorId, date);
+            if (tickets.isEmpty()) {
+                throw new TicketNotFoundException("No tickets found for doctor with ID " + doctorId + " on date " + date);
+            }
+            return ResponseEntity.ok(tickets);
+        } catch (TicketNotFoundException e) {
+            logger.error("Tickets not found for doctor with ID " + doctorId + "on date" + date);
+            throw e;
+        }
+    }
+
+    @GetMapping("/patient/{patientId}")
+    @ApiOperation(value = "Получить билеты, занятые одним пациентом по ID пациента")
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Успешно"),
+            @ApiResponse(code = 404, message = "Билеты не найдены")
+    })
+    public ResponseEntity<List<Ticket>> getTicketsByPatientId(
+            @ApiParam(value = "Идентификатор пациента", required = true) @PathVariable Long patientId) {
+        try {
+            List<Ticket> tickets = ticketService.getTicketsByPatientId(patientId);
+            if (tickets.isEmpty()) {
+                throw new TicketNotFoundException("No tickets found for patient with ID " + patientId);
+            }
+            return ResponseEntity.ok(tickets);
+        } catch (TicketNotFoundException e) {
+            logger.error("Tickets not found for patient with ID " + patientId);
+            throw e;
+        }
+    }
+
 }

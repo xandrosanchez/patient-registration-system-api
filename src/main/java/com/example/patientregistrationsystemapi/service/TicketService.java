@@ -4,6 +4,7 @@ import com.example.patientregistrationsystemapi.dto.ScheduleRequest;
 import com.example.patientregistrationsystemapi.dto.TicketRequest;
 import com.example.patientregistrationsystemapi.model.Ticket;
 
+import java.time.LocalDate;
 import java.util.List;
 
 public interface TicketService {
@@ -14,5 +15,6 @@ public interface TicketService {
     void deleteTicketByDoctorId(Long id);
     Ticket saveTicket(TicketRequest ticketRequest);
     Ticket updateTicket(Long id, TicketRequest ticketRequest);
-
+    List<Ticket> getTicketByDoctorAndDate(Long doctorId, LocalDate date);
+    List<Ticket> getTicketsByPatientId(Long patientId);
 }
