@@ -15,7 +15,7 @@ public class TicketRequest {
     @NotNull(message = "doctorId не может быть null")
     @Positive(message = "doctorId должен быть положительным числом")
     private Long doctorId;
-    @NotNull(message = "End time cannot be null")
+    @NotNull(message = "startTime cannot be null")
     private LocalDateTime startTime;
     @NotNull(message = "End time cannot be null")
     private LocalDateTime endTime;
