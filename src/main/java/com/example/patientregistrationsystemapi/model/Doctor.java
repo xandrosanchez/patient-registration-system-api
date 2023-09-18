@@ -21,7 +21,7 @@ public class Doctor {
     private UUID uuid;
     @NotBlank(message = "Поле fullName не должно быть пустым")
     @Column(nullable = false)
-    private String fullName;;
+    private String fullName;
     @OneToMany(mappedBy = "doctor", cascade = CascadeType.ALL)
     @JsonIgnore
     private List<Ticket> ticketList;
